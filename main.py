@@ -4,8 +4,8 @@ from menu import MenuScreen, PauseScreen
 
 
 #set window size
-WINDOW_HEIGHT = 480
-WINDOW_WIDTH = 720
+WINDOW_HEIGHT = 600
+WINDOW_WIDTH = 800
 
 #initialize pygame
 pygame.init()
@@ -35,6 +35,14 @@ fade_counter = 0
 FPS = 60
 
 
+def load_img(file_name):
+   try:
+      img = pygame.image.load(f"assets/{file_name}")
+   except pygame.error as message:
+      print(f"Cannot load image: {file_name}")
+      raise SystemExit(message)
+   img = img.convert_alpha()
+   return img
 
 def input(events):
    global running, show_menu, paused, game_over
@@ -46,7 +54,7 @@ def input(events):
             show_menu = False
          if event.key == pygame.K_q:
             running = False
-         if not game_over:
+         if not game_over and not show_menu:
             if event.key == pygame.K_p:
                   paused = not paused
          if paused:
@@ -71,6 +79,7 @@ def input(events):
 def draw_text(text, font, text_col, x, y):
    img = font.render(text, False, text_col)
    screen.blit(img, (x, y))
+   
 
 #function for drawing background
 def draw_bg(bg_img):
@@ -87,7 +96,7 @@ while running:
    # Show menu if necessary
    if show_menu:
       main_menu.display_menu()
-   elif paused == True:
+   elif paused:
       pause_menu.display_menu(screen)
       
    else:
